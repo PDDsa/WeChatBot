@@ -87,7 +87,7 @@ class WeChat:
             command = "open -a /Applications/Preview.app %s&" % quote(file_path)
             os.system(command)
         else:
-            webbrowser.open(os.path.join(os.getcwd(),file_path))
+            webbrowser.open(file_path)
 
     def wait4login(self):
         """
@@ -208,7 +208,7 @@ class WeChat:
 
     def run(self):
         self.get_uuid()
-        self.gen_qr_code('temp/wxqr.png')
+        self.gen_qr_code(os.path.join(self.temp_pwd,'wxqr.png'))
         result =self.wait4login()
         if result != wechat.SUCCESS:
             print('[ERROR] Web WeChat login failed. failed code=%s' % (result))
