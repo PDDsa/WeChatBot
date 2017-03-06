@@ -1,6 +1,7 @@
-> 这个代码目前主要基于[wxBot](https://github.com/liuwons/wxBot)仓库改造成Python3。
+> 本程序的代码部分主要参考[wxBot](https://github.com/liuwons/wxBot)，代码有所改造，主要从Python2移植到Python3。
+> 本协议主要参考[WeixinBot](https://github.com/Urinx/WeixinBot)。
 
-## Web Weixin Pipeline
+## Web WeChat Pipeline
 
 ```
        +--------------+     +---------------+   +---------------+
@@ -29,7 +30,7 @@
 +-------------+
 ```
 
-## Web Weixin API
+## Web WeChat API
 
 ### 登录
 
@@ -46,13 +47,11 @@ window.QRLogin.code = 200; window.QRLogin.uuid = "xxx"
 ```
 > 注：这里的appid就是在微信开放平台注册的应用的AppID。网页版微信有两个AppID，早期的是`wx782c26e4c19acffb`，在微信客户端上显示为应用名称为`Web微信`；现在用的是`wxeb7ec651dd0aefa9`，显示名称为`微信网页版`。
 
-![6](screenshot/8.jpg)
-<br>
 
 | API | 生成二维码 |
 | --- | --------- |
 | url | https://login.weixin.qq.com/l/ `uuid` |
-<br>
+
 
 | API | 二维码扫描登录 |
 | --- | --------- |
@@ -72,7 +71,7 @@ xxx:
 当返回200时，还会有
 window.redirect_uri="https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxnewloginpage?ticket=xxx&uuid=xxx&lang=xxx&scan=xxx";
 ```
-<br>
+
 
 | API | webwxnewloginpage |
 | --- | --------- |
@@ -92,7 +91,6 @@ window.redirect_uri="https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxnewloginpage?tic
 	<isgrayscale>1</isgrayscale>
 </error>
 ```
-<br>
 
 ### 微信初始化
 
@@ -155,7 +153,6 @@ window.redirect_uri="https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxnewloginpage?tic
 	"ClickReportInterval": 600000
 }
 ```
-<br>
 
 | API | webwxstatusnotify |
 | --- | --------- |
@@ -175,7 +172,6 @@ window.redirect_uri="https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxnewloginpage?tic
 	...
 }
 ```
-<br>
 
 ### 获取联系人信息
 
@@ -232,7 +228,6 @@ window.redirect_uri="https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxnewloginpage?tic
 	"Seq": 0
 }
 ```
-<br>
 
 | API | webwxbatchgetcontact |
 | --- | --------- |
@@ -243,7 +238,7 @@ window.redirect_uri="https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxnewloginpage?tic
 | params | { <br> &nbsp;&nbsp;&nbsp;&nbsp; BaseRequest: { Uin: xxx, Sid: xxx, Skey: xxx, DeviceID: xxx }, <br> &nbsp;&nbsp;&nbsp;&nbsp; Count: `群数量`, <br> &nbsp;&nbsp;&nbsp;&nbsp; List: [ <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { UserName: `群ID`, EncryChatRoomId: "" }, <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ... <br> &nbsp;&nbsp;&nbsp;&nbsp; ], <br> } |
 
 返回数据(JSON)同上
-<br><br>
+
 
 ### 同步刷新
 
@@ -268,7 +263,6 @@ selector:
 	2 新的消息
 	7 进入/离开聊天界面
 ```
-<br>
 
 | API | webwxsync |
 | --- | --------- |
@@ -324,7 +318,6 @@ selector:
 	...
 }
 ```
-<br>
 
 ### 消息接口
 
@@ -357,7 +350,6 @@ selector:
 | header | ContentType: application/json; charset=UTF-8 |
 | params | { <br> &nbsp;&nbsp;&nbsp;&nbsp; BaseRequest: { Uin: xxx, Sid: xxx, Skey: xxx, DeviceID: xxx }, <br> &nbsp;&nbsp;&nbsp;&nbsp; Msg: { <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Type: 47 `emoji消息`, <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EmojiFlag: 2, <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MediaId: `表情上传后的媒体ID`, <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FromUserName: `自己ID`, <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ToUserName: `好友ID`, <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LocalID: `与clientMsgId相同`, <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ClientMsgId: `时间戳左移4位随后补上4位随机数` <br> &nbsp;&nbsp;&nbsp;&nbsp; } <br> } |
 
-<br>
 
 ### 图片接口
 
@@ -366,21 +358,20 @@ selector:
 | url | https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxgeticon |
 | method | GET |
 | params | **seq**: `数字，可为空` <br> **username**: `ID` <br> **skey**: xxx |
-<br>
+
 
 | API | webwxgetheadimg |
 | --- | --------------- |
 | url | https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxgetheadimg |
 | method | GET |
 | params | **seq**: `数字，可为空` <br> **username**: `群ID` <br> **skey**: xxx |
-<br>
+
 
 | API | webwxgetmsgimg |
 | --- | --------------- |
 | url | https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxgetmsgimg |
 | method | GET |
 | params | **MsgID**: `消息ID` <br> **type**: slave `略缩图` or `为空时加载原图` <br> **skey**: xxx |
-<br>
 
 ### 多媒体接口
 
@@ -389,14 +380,13 @@ selector:
 | url | https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxgetvideo |
 | method | GET |
 | params | **msgid**: `消息ID` <br> **skey**: xxx |
-<br>
+
 
 | API | webwxgetvoice |
 | --- | --------------- |
 | url | https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxgetvoice |
 | method | GET |
 | params | **msgid**: `消息ID` <br> **skey**: xxx |
-<br>
 
 ### 账号类型
 
@@ -406,7 +396,6 @@ selector:
 | 群聊 | 以`@@`开头，例如：`@@xxx` |
 | 公众号/服务号 | 以`@`开头，但其`VerifyFlag` & 8 != 0 <br><br> `VerifyFlag`: <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 一般公众号/服务号：8 <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 微信自家的服务号：24 <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 微信官方账号`微信团队`：56 |
 | 特殊账号 | 像文件传输助手之类的账号，有特殊的ID，目前已知的有：<br> `filehelper`, `newsapp`, `fmessage`, `weibo`, `qqmail`, `fmessage`, `tmessage`, `qmessage`, `qqsync`, `floatbottle`, `lbsapp`, `shakeapp`, `medianote`, `qqfriend`, `readerapp`, `blogapp`, `facebookapp`, `masssendapp`, `meishiapp`, `feedsapp`, `voip`, `blogappweixin`, `weixin`, `brandsessionholder`, `weixinreminder`, `officialaccounts`, `notification_messages`, `wxitil`, `userexperience_alarm`, `notification_messages` |
-<br>
 
 ### 消息类型
 
@@ -441,7 +430,6 @@ selector:
 	"SubMsgType": 0
 }
 ```
-<br>
 
 | MsgType | 说明 |
 | ------- | --- |
@@ -463,7 +451,6 @@ selector:
 | 9999 | SYSNOTICE |
 | 10000 | 系统消息 |
 | 10002 | 撤回消息 |
-<br>
 
 **微信初始化消息**
 ```html
