@@ -73,8 +73,7 @@ class WeChat:
         elif self.conf['qr'] == 'tty':
             print(qr.terminal(quiet_zone=1))
 
-    @staticmethod
-    def show_image(file_path):
+    def show_image(self,file_path):
         """
         跨平台显示图片文件
         :param file_path: 图片文件路径
