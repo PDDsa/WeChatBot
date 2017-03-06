@@ -367,6 +367,8 @@ class WeChat:
         self.status_notify()
         if self.get_contact():
             print('[INFO] Get %d contacts' % len(self.contact_list))
+            f1 = open('temp/group.txt', 'w')
+            print('[INFO] Group Messege %s'%self.group_members, file=f1)
             print('[INFO] Start to process messages .')
 
 if __name__=='__main__':
