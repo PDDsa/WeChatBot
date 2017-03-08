@@ -38,7 +38,7 @@ class WeChat:
     '''
     def __init__(self):
         self.session = SafeSession()
-        self.session.headers.update({'User-Agent': 'Mozilla/5.0 (X11; Linux i686; U;) Gecko/20070322 Kazehakase/0.4.5'})
+        self.session.headers.update({'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36'})
         self.conf = {'qr':'tty'}
         self.uuid = ''
 
@@ -81,7 +81,7 @@ class WeChat:
         if os.path.exists(self.temp_pwd) == False:
             os.makedirs(self.temp_pwd)
 
-        self.DEBUG = False
+        self.DEBUG = True
 
     def get_uuid(self):
         url = 'https://login.weixin.qq.com/jslogin'
@@ -263,7 +263,7 @@ class WeChat:
             return False
         r.encoding = 'utf-8'
         if self.DEBUG:
-            with open(os.path.join(self.temp_pwd,'contacts.json'), 'w') as f:
+            with open(os.path.join(self.temp_pwd,'contacts.json'), 'wb+') as f:
                 f.write(r.text.encode('utf-8'))
         dic = json.loads(r.text)
         self.member_list = dic['MemberList']
@@ -345,6 +345,40 @@ class WeChat:
         self.encry_chat_room_id_list = encry_chat_room_id
 
 
+    def save_contacts_info(self):
+        import xlsxwriter
+        from PIL import Image
+        from io import BytesIO
+        workbook = xlsxwriter.Workbook(os.path.join(self.temp_pwd,'contact_list.xlsx')) #创建工作簿
+        '''
+        创建第一个sheet:
+            sheet1
+        '''
+        sheet1 = workbook.add_worksheet() #创建sheet
+        row0 = [u'NickName', u'HeadImgUrl', u'RemarkName']
+
+        sheet1.set_column('A:C', 18)
+        #生成第一行
+        for i in range(0,len(row0)):
+            sheet1.write(0,i,row0[i])
+
+        for i in range(0, len(self.contact_list)):
+            try:
+                sheet1.set_row(i+1, 100)
+                sheet1.write(i+1,0,self.contact_list[i]['NickName'])
+                # 新的微信号，用https://wx2.qq.com
+                url ="https://wx.qq.com" + self.contact_list[i]['HeadImgUrl']
+                print(url)
+                r = self.session.get(url)
+                pic = Image.open(BytesIO(r.content))
+                pic.save(os.path.join(self.temp_pwd, 'img', self.contact_list[i]['NickName']+'.jpg'))
+                #sheet1.write(i+1,1,self.contact_list[i]['HeadImgUrl'])
+                sheet1.insert_image(i+1,1,os.path.join(self.temp_pwd, 'img', self.contact_list[i]['NickName']+'.jpg'))
+                sheet1.write(i+1,2,self.contact_list[i]['RemarkName'])
+            except Exception as e:
+                print(e)
+        workbook.close()
+
     def run(self):
         self.get_uuid()
         self.gen_qr_code(os.path.join(self.temp_pwd,'wxqr.png'))
@@ -367,8 +401,7 @@ class WeChat:
         self.status_notify()
         if self.get_contact():
             print('[INFO] Get %d contacts' % len(self.contact_list))
-            f1 = open('temp/group.txt', 'w')
-            print('[INFO] Group Messege %s'%self.group_members, file=f1)
+            self.save_contacts_info()
             print('[INFO] Start to process messages .')
 
 if __name__=='__main__':
